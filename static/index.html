@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Генератор этикеток</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; }
+    label { display: block; margin-top: 15px; }
+    input[type="number"], input[type="file"] {
+      padding: 5px;
+      margin-top: 5px;
+      width: 200px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Генерация PDF-этикеток</h1>
+
+  <form id="labelForm" enctype="multipart/form-data">
+    <label>
+      Загрузите Excel-файл:
+      <input type="file" name="excel_file" accept=".xlsx,.xls" required>
+    </label>
+
+    <label>
+      Ширина этикетки (мм):
+      <input type="number" name="width_mm" min="20" step="0.1" required>
+    </label>
+
+    <label>
+      Высота этикетки (мм):
+      <input type="number" name="height_mm" min="20" step="0.1" required>
+    </label>
+
+    <button type="submit">Сгенерировать PDF</button>
+  </form>
+
+  <script>
+    document.getElementById('labelForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const response = await fetch('/generate', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'etiketki.pdf';
+        link.click();
+      } else {
+        alert('Ошибка при генерации PDF');
+      }
+    });
+  </script>
+
+</body>
+</html>
