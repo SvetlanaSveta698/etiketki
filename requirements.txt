@@ -1,0 +1,6 @@
+flask
+pandas
+reportlab
+python-barcode
+pillow
+openpyxl
